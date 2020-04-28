@@ -1,0 +1,22 @@
+const jwt = require('jsonwebtoken');
+const Users = require('../models/users');
+const auth = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.replace('Bearer ', '');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_CODE);
+    const user = await Users.findOne({
+      _id: decoded._id,
+      'tokens.token': token,
+    });
+    if (!user) {
+      throw new Error();
+    }
+    req.token = token;
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).send({ error: 'Provide Authorization!' });
+  }
+};
+
+module.exports = auth;
