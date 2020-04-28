@@ -10,7 +10,7 @@ const sendWelcomeEmail = (email, name) => {
   });
 };
 
-const sendCancelMail = (email, name) => {
+const sendCancelEmail = (email, name) => {
   sgMail.send({
     to: email,
     from: 'admin@whynotgoogleit.com',
@@ -19,4 +19,4 @@ const sendCancelMail = (email, name) => {
   });
 };
 
-module.exports = { sendWelcomeEmail, sendCancelMail };
+module.exports = { sendWelcomeEmail, sendCancelEmail };

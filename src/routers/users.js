@@ -4,14 +4,15 @@ const sharp = require('sharp');
 const router = new express.Router();
 const Users = require('../models/users');
 const auth = require('../middleware/auth');
-const { sendWelcomeMail, sendCancelMail } = require('../emails/account');
+const { sendWelcomeEmail, sendCancelEmail } = require('../emails/account');
 
 //Create users to the db
 router.post('/users', async (req, res) => {
   const user = new Users(req.body);
+  console.log(user);
   try {
     await user.save();
-    sendWelcomeMail(user.email, user.name);
+    sendWelcomeEmail(user.email, user.name);
     const token = await user.generateWebToken();
     res.status(201).send({ user, token });
   } catch (e) {
@@ -157,7 +158,7 @@ router.patch('/users/me', auth, async (req, res) => {
 router.delete('/users/me', auth, async (req, res) => {
   try {
     await req.user.remove();
-    sendCancelMail(req.user.email, req.user.name);
+    sendCancelEmail(req.user.email, req.user.name);
     res.status(201).send(req.user);
   } catch (e) {
     res.status(500).send();
