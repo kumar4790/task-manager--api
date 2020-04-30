@@ -95,7 +95,7 @@ router.post('/users/login', async (req, res) => {
       req.body.password
     );
     const token = await user.generateWebToken();
-    res.status(200).send({ user, token });
+    res.send({ user, token });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -108,7 +108,7 @@ router.post('/users/logout', auth, async (req, res) => {
       return token.token !== req.token;
     });
     req.user.save();
-    res.status(200).send();
+    res.send();
   } catch (e) {
     res.status(500).send();
   }
@@ -119,7 +119,7 @@ router.post('/users/logoutAll', auth, async (req, res) => {
   try {
     req.user.tokens = [];
     req.user.save();
-    res.status(200).send();
+    res.send();
   } catch (e) {
     res.status(500).send();
   }
@@ -147,7 +147,7 @@ router.patch('/users/me', auth, async (req, res) => {
       req.user[update] = req.body[update];
     });
     await req.user.save();
-    res.status(201).send(req.user);
+    res.send(req.user);
   } catch (e) {
     res.status(400).send(e);
     res.status(500).send();
@@ -159,7 +159,7 @@ router.delete('/users/me', auth, async (req, res) => {
   try {
     await req.user.remove();
     sendCancelEmail(req.user.email, req.user.name);
-    res.status(201).send(req.user);
+    res.send(req.user);
   } catch (e) {
     res.status(500).send();
   }
