@@ -9,7 +9,6 @@ const { sendWelcomeEmail, sendCancelEmail } = require('../emails/account');
 //Create users to the db
 router.post('/users', async (req, res) => {
   const user = new Users(req.body);
-  console.log(user);
   try {
     await user.save();
     sendWelcomeEmail(user.email, user.name);
@@ -108,7 +107,7 @@ router.post('/users/logout', auth, async (req, res) => {
       return token.token !== req.token;
     });
     req.user.save();
-    res.send();
+    res.send({ message: 'Logout Successful!' });
   } catch (e) {
     res.status(500).send();
   }
@@ -119,7 +118,7 @@ router.post('/users/logoutAll', auth, async (req, res) => {
   try {
     req.user.tokens = [];
     req.user.save();
-    res.send();
+    res.send({ message: 'All accounts logout Successfully!' });
   } catch (e) {
     res.status(500).send();
   }
