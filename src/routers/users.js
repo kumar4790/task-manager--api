@@ -137,7 +137,7 @@ router.get('/users/:email', auth, async (req, res) => {
     if (!user) {
       return res.status(404).send();
     }
-    res.send({ _id, name, email });
+    res.send(user);
   } catch (e) {
     res.status(500).send();
   }
