@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const taskSchema = new mongoose.Schema(
+const transactSchema = new mongoose.Schema(
   {
+    category: { type: String, trim: true },
     description: {
       type: String,
       required: true,
@@ -9,13 +10,15 @@ const taskSchema = new mongoose.Schema(
       lowercase: true,
       minlength: 1,
     },
-    completed: { type: Boolean, default: false },
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
+    amount: { type: Number, required: true },
+    type: {
+      type: String,
+      default: 'exp',
       required: true,
-      ref: 'Users',
+      maxlength: 3,
+      trim: true,
     },
-    assigned: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'Users',
@@ -24,6 +27,6 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Tasks = mongoose.model('Tasks', taskSchema);
+const Transact = mongoose.model('Tasks', taskSchema);
 
 module.exports = Tasks;

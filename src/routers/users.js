@@ -129,6 +129,25 @@ router.get('/users/me', auth, async (req, res) => {
   res.send(req.user);
 });
 
+//read the user by its email from db
+router.get('/users/:email', auth, async (req, res) => {
+  const email = req.params.email;
+  try {
+    const user = await Users.findOne({ email });
+    if (!user) {
+      return res.status(404).send();
+    }
+    res.send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//Read the list of users from db
+router.get('/users/me', auth, async (req, res) => {
+  res.send(req.user);
+});
+
 //Update the user data from db
 
 router.patch('/users/me', auth, async (req, res) => {

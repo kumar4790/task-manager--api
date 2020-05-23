@@ -57,6 +57,7 @@ userSchema.virtual('tasks', {
   foreignField: 'owner',
 });
 
+//data for sending back to user
 userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
@@ -66,6 +67,8 @@ userSchema.methods.toJSON = function () {
   delete userObject.avatar;
   return userObject;
 };
+
+//generate Token
 userSchema.methods.generateWebToken = async function () {
   const user = this;
   const token = jwt.sign(
@@ -77,6 +80,7 @@ userSchema.methods.generateWebToken = async function () {
   return token;
 };
 
+//find the user by their credentials
 userSchema.statics.findUserByCredentials = async (email, password) => {
   const user = await Users.findOne({ email });
   if (!user) {

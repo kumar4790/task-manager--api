@@ -5,19 +5,28 @@ const auth = require('../middleware/auth');
 
 //Create tasks to the db
 router.post('/tasks', auth, async (req, res) => {
-  const task = await new Tasks({ ...req.body, owner: req.user._id });
+  console.log(req.body.assigned);
+  const request = req.body.assigned
+    ? req.body
+    : { ...req.body, assigned: req.user._id };
+  const task = await new Tasks({
+    ...request,
+    owner: req.user._id,
+  });
   try {
     await task.save();
     res.status(201).send(task);
   } catch (error) {
-    res.status(400).send(e);
+    res.status(400).send(error);
   }
 });
 
 //Read the list of tasks from db
 //GET /tasks?completed=true
+//GET /tasks?search=shdsdh
 //GET /tasks?limit=1&skip=1
 //GET /tasks?sortBy=createdAt_desc
+//GET /tasks?count
 router.get('/tasks', auth, async (req, res) => {
   const match = {};
   const sort = {};
@@ -25,6 +34,10 @@ router.get('/tasks', auth, async (req, res) => {
   if (req.query.completed) {
     match.completed = req.query.completed === 'true';
   }
+
+  // if (req.query.search) {
+  //   match.search = req.query.completed === 'true';
+  // }
 
   if (req.query.sortBy) {
     const parts = req.query.sortBy.split('_');
